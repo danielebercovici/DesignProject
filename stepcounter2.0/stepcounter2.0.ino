@@ -15,6 +15,7 @@ long elapsedTime;
 
 void setup() {
   Serial.begin(9600);
+  //Initialize segment display
   pinMode(2, OUTPUT);  
   pinMode(3, OUTPUT); 
   pinMode(4, OUTPUT); 
@@ -26,17 +27,17 @@ void setup() {
   pinMode(D10, OUTPUT);
   pinMode(D100, OUTPUT);
   pinMode(D1000, OUTPUT);
+  //initialize tiltsensor
   pinMode(tiltSensor, INPUT);
+  //NO INITIALIZED BUTTON?? A4????
 }
 
 void loop() {
-  
   StopWatch();
   StepCounter();
   Encouragment();
-
-  
 }
+
 //STOPWATCH
 void StopWatch(){
   buttonState = digitalRead(A5);
@@ -52,8 +53,6 @@ void StopWatch(){
       buttonPushCounter--;
       Serial.println("stop");
       Serial.println( (int)(elapsedTime)); 
-
-
     }
     // Delay to avoid bouncing
     delay(50);
