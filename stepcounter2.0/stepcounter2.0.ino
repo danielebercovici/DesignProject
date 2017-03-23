@@ -95,6 +95,7 @@ prevSwitchState = switchState;
 //ENCOURAGMENT
 void Encouragment(){
 //writeGood();
+//delay(100);
 //writeNice();
   }
 void writeNice(){
