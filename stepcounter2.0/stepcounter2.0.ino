@@ -29,7 +29,7 @@ void setup() {
   pinMode(D1000, OUTPUT);
   //initialize tiltsensor
   pinMode(tiltSensor, INPUT);
-  //NO INITIALIZED BUTTON?? A4????
+
 }
 
 void loop() {
