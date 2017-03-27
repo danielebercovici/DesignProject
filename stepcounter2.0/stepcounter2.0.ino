@@ -207,13 +207,11 @@ void partyLights(){
    }
       delay(30);
    for(int i=0;i<NUMPIXELS;i++){
-      pixels.setPixelColor(i, pixels.Color(0,255,255)); //blue LEDs
+      pixels.setPixelColor(i, pixels.Color(255,0,255)); //pink LEDs
       pixels.show();
       delay(3);
    }
    }
-//    pixels.setPixelColor(1, 255, 0, 255);
-//    pixels.setPixelColor(0, 255, 0, 255);
     delay(900);
     //turn off LEDS
       for(int i=0;i<NUMPIXELS;i++){
