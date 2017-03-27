@@ -52,18 +52,8 @@ void setup() {
 
 void loop() {
   StopWatch();
-  StepCounter();
-  Encouragment();
-   for(int i=0;i<NUMPIXELS;i++){
-
-    // pixels.Color takes RGB values, from 0,0,0 up to 255,255,255
-    pixels.setPixelColor(i, pixels.Color(0,150,0)); // Moderately bright green color.
-
-    pixels.show(); // This sends the updated pixel color to the hardware.
-
-    delay(500); // Delay for a period of time (in milliseconds).
-
-  }
+  //StepCounter();
+  //Encouragment();
 }
 
 //STOPWATCH
@@ -77,15 +67,36 @@ void StopWatch(){
       startTime = millis();
       buttonPushCounter++;
       Serial.println("go");
+      for(int i=0;i<NUMPIXELS;i++){
+        pixels.setPixelColor(i, pixels.Color(0,150,0)); //green LEDs
+        pixels.show();
+      }
+      delay(900);
+      //turn off LEDS
+      for(int i=0;i<NUMPIXELS;i++){
+        pixels.setPixelColor(i, pixels.Color(0,0,0)); //red LEDs
+        pixels.show();
+      }
     } else if (buttonState == HIGH && buttonPushCounter==1) {
       elapsedTime =   millis() - startTime;
       buttonPushCounter--;
       Serial.println("stop");
       Serial.println( (int)(elapsedTime)); 
+      for(int i=0;i<NUMPIXELS;i++){
+        pixels.setPixelColor(i, pixels.Color(204,0,0)); //red LEDs
+        pixels.show();
+      }
+      delay(900);
+      //turn off LEDS
+      for(int i=0;i<NUMPIXELS;i++){
+        pixels.setPixelColor(i, pixels.Color(0,0,0)); //red LEDs
+        pixels.show();
+      }
     }
+      }
     // Delay to avoid bouncing
     delay(50);
-  }
+ 
       int temp = (int)(elapsedTime/1000); //changed to seconds instead (should change to seconds and minutes maybe xx:xx)
       int d1= temp%10;
       int d10= (temp/10)%10;
@@ -104,7 +115,7 @@ void StopWatch(){
 //STEP COUNTER
 void StepCounter(){
  switchState = digitalRead(tiltSensor); //switchState is high
- Serial.println(switchState);
+ //Serial.println(switchState);
 //  if (switchState != prevSwitchState) {
 //    if (switchState == LOW) {
 //      steps = (steps + 1);
@@ -136,7 +147,7 @@ prevSwitchState = switchState;
 
 //ENCOURAGMENT
 void Encouragment(){
-//writeGood();
+writeGood();
 //delay(100);
 //writeNice();
 }
