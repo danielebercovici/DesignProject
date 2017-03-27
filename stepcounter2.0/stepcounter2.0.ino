@@ -24,6 +24,16 @@ long elapsedTime;
 #define PIN            A4 //LED pin
 #define NUMPIXELS      60 //Num of LEDs
 int timer =0; //timer for LED button
+//Night time initialization 
+int current;         
+                    
+long millis_held;    // How long the button was held (milliseconds)
+long secs_held;      // How long the button was held (seconds)
+long prev_secs_held; // How long the button was held in the previous check
+byte previous = HIGH;
+unsigned long firstTime;
+bool buttonPush=false;
+
 //intialize LED library
 Adafruit_NeoPixel pixels = Adafruit_NeoPixel(NUMPIXELS, PIN, NEO_GRB + NEO_KHZ800);
 
@@ -52,10 +62,10 @@ void setup() {
 }
 
 void loop() {
-  StopWatch();
+  //StopWatch();
   //StepCounter();
   //Encouragment();
-  //NightDayMode();
+  NightDayMode();
 }
 
 //STOPWATCH
@@ -176,46 +186,78 @@ void writeGood(){
   displaydigit4(-1,'G');
   }
 void NightDayMode(){
-  timer = 0;
-  buttonState = digitalRead(A5);
-  while (buttonState  = HIGH) {
-    delay(100);
-    timer++;
-   }
-  if (timer > 20) { //button has been pressed less than 2 seconds
-      for(int i=0;i<NUMPIXELS;i++){
-        pixels.setPixelColor(i, pixels.Color(255,255,255)); //white LEDs
-        pixels.show();
-      }
+  current = digitalRead(A5);
+
+  // if the button state changes to pressed, remember the start time 
+  if (current == LOW && previous == HIGH && (millis() - firstTime) > 200) {
+    firstTime = millis();
   }
+
+  millis_held = (millis() - firstTime);
+  secs_held = millis_held / 1000;
+Serial.println(secs_held);
+  // This if statement is a basic debouncing tool, the button must be pushed for at least
+  // 100 milliseconds in a row for it to be considered as a push.
+  if (millis_held > 50) {
+
+
+    // check if the button was released since we last checked
+    if (current == HIGH && previous == LOW) {
+     
+  
+
+      // If the button was held for 3-6 seconds 
+      if (secs_held >= 1 && secs_held < 3 && buttonPush==false ) {
+//        for(int i=0;i<NUMPIXELS;i++){
+//              pixels.setPixelColor(i, pixels.Color(255,255,255)); //white LEDs
+//              pixels.show();
+//         }
+         Serial.print("LIGHTS camera action");
+        buttonPush=true;
+      }
+      else if (secs_held >= 1 && secs_held < 3 && buttonPush==true ) {
+          //turn off LEDS
+          delay(700);
+        for(int i=0;i<NUMPIXELS;i++){
+              pixels.setPixelColor(i, pixels.Color(0,0,0)); 
+              pixels.show();
+         }
+         Serial.print("Off");
+        buttonPush=false;
+      }
+    }
+  }
+
+  previous = current;
+  prev_secs_held = secs_held;
 }
 void partyLights(){
-   for(int j=0;j<8;j++){
+   for(int j=0;j<3;j++){
   for(int i=0;i<NUMPIXELS;i++){
       pixels.setPixelColor(i, pixels.Color(204,153,255)); //light purple LEDs
       pixels.show();
-      delay(3);
+      delay(2);
    }
    delay(30);
    for(int i=0;i<NUMPIXELS;i++){
       pixels.setPixelColor(i, pixels.Color(255,128,0)); //orange LEDs
       pixels.show();
-      delay(3);
+      delay(2);
    }
    delay(30);
    for(int i=0;i<NUMPIXELS;i++){
       pixels.setPixelColor(i, pixels.Color(0,255,255)); //blue LEDs
       pixels.show();
-      delay(3);
+      delay(2);
    }
-      delay(30);
+      delay(20);
    for(int i=0;i<NUMPIXELS;i++){
       pixels.setPixelColor(i, pixels.Color(255,0,255)); //pink LEDs
       pixels.show();
       delay(3);
    }
    }
-    delay(900);
+    delay(800);
     //turn off LEDS
       for(int i=0;i<NUMPIXELS;i++){
         pixels.setPixelColor(i, pixels.Color(0,0,0)); //red LEDs
