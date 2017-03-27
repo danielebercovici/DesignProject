@@ -23,6 +23,7 @@ long elapsedTime;
 
 #define PIN            A4 //LED pin
 #define NUMPIXELS      60 //Num of LEDs
+int timer =0; //timer for LED button
 //intialize LED library
 Adafruit_NeoPixel pixels = Adafruit_NeoPixel(NUMPIXELS, PIN, NEO_GRB + NEO_KHZ800);
 
@@ -54,6 +55,7 @@ void loop() {
   StopWatch();
   //StepCounter();
   //Encouragment();
+  //NightDayMode();
 }
 
 //STOPWATCH
@@ -87,12 +89,17 @@ void StopWatch(){
         pixels.show();
       }
       delay(900);
+      //If workout was long (30min?) PARTY LIGHTS
+      if((int)elapsedTime>3000){
+       partyLights();
+      }
       //turn off LEDS
       for(int i=0;i<NUMPIXELS;i++){
         pixels.setPixelColor(i, pixels.Color(0,0,0)); //red LEDs
         pixels.show();
       }
     }
+
       }
     // Delay to avoid bouncing
     delay(50);
@@ -165,7 +172,55 @@ void writeGood(){
   displaydigit3(-1,'O');
   displaydigit4(-1,'G');
   }
-
+void NightDayMode(){
+  timer = 0;
+  buttonState = digitalRead(A5);
+  while (buttonState  = HIGH) {
+    delay(100);
+    timer++;
+   }
+  if (timer > 10) { //button has been pressed less than a second
+      for(int i=0;i<NUMPIXELS;i++){
+        pixels.setPixelColor(i, pixels.Color(204,0,0)); //red LEDs
+        pixels.show();
+      }
+  }
+}
+void partyLights(){
+   for(int j=0;j<8;j++){
+  for(int i=0;i<NUMPIXELS;i++){
+      pixels.setPixelColor(i, pixels.Color(204,153,255)); //light purple LEDs
+      pixels.show();
+      delay(3);
+   }
+   delay(30);
+   for(int i=0;i<NUMPIXELS;i++){
+      pixels.setPixelColor(i, pixels.Color(255,128,0)); //orange LEDs
+      pixels.show();
+      delay(3);
+   }
+   delay(30);
+   for(int i=0;i<NUMPIXELS;i++){
+      pixels.setPixelColor(i, pixels.Color(0,255,255)); //blue LEDs
+      pixels.show();
+      delay(3);
+   }
+      delay(30);
+   for(int i=0;i<NUMPIXELS;i++){
+      pixels.setPixelColor(i, pixels.Color(0,255,255)); //blue LEDs
+      pixels.show();
+      delay(3);
+   }
+   }
+//    pixels.setPixelColor(1, 255, 0, 255);
+//    pixels.setPixelColor(0, 255, 0, 255);
+    delay(900);
+    //turn off LEDS
+      for(int i=0;i<NUMPIXELS;i++){
+        pixels.setPixelColor(i, pixels.Color(0,0,0)); //red LEDs
+        pixels.show();
+      }
+  }
 void displaydigit1(int d1, char l){
     digitalWrite(D1, 0);
     digitalWrite(D10, 1);
