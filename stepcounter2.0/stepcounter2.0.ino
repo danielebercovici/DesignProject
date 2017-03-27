@@ -1,3 +1,9 @@
+//import LED library
+#include <Adafruit_NeoPixel.h> 
+#ifdef __AVR__
+  #include <avr/power.h>
+#endif
+
 const int tiltSensor = 13;
 long tiltTime = 0;
 long tiltDebounce = 50;
@@ -10,10 +16,15 @@ int buttonState = 0;
 int lastButtonState = 1;    
 long startTime ;
 long elapsedTime;
-#define D1 11
-#define D10 12
-#define D100 10
-#define D1000 8
+#define D1 11 //Digit 1
+#define D10 12 //Digit 2
+#define D100 10 //Digit 3
+#define D1000 8 //Digit 4
+
+#define PIN            A4 //LED pin
+#define NUMPIXELS      60 //Num of LEDs
+//intialize LED library
+Adafruit_NeoPixel pixels = Adafruit_NeoPixel(NUMPIXELS, PIN, NEO_GRB + NEO_KHZ800);
 
 void setup() {
   Serial.begin(9600);
@@ -35,12 +46,24 @@ void setup() {
   
   //initialize tiltsensor
   pinMode(tiltSensor, INPUT);
+  // This initializes LED
+  pixels.begin(); 
 }
 
 void loop() {
   StopWatch();
   StepCounter();
   Encouragment();
+   for(int i=0;i<NUMPIXELS;i++){
+
+    // pixels.Color takes RGB values, from 0,0,0 up to 255,255,255
+    pixels.setPixelColor(i, pixels.Color(0,150,0)); // Moderately bright green color.
+
+    pixels.show(); // This sends the updated pixel color to the hardware.
+
+    delay(500); // Delay for a period of time (in milliseconds).
+
+  }
 }
 
 //STOPWATCH
@@ -100,10 +123,10 @@ void StepCounter(){
   int d100=temp/100;
   int d10= temp/10;
   int d1= temp%10;
-  displaydigit1(d1,empty);
-  displaydigit2(d10, empty);
-  displaydigit3(d100, empty);
-  displaydigit4(d1000,empty);
+//  displaydigit1(d1,empty);
+//  displaydigit2(d10, empty);
+//  displaydigit3(d100, empty);
+//  displaydigit4(d1000,empty);
 prevSwitchState = switchState;
   }
 
