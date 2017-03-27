@@ -99,7 +99,6 @@ void StopWatch(){
         pixels.show();
       }
     }
-
       }
     // Delay to avoid bouncing
     delay(50);
@@ -137,6 +136,10 @@ void StepCounter(){
   }
   
   int temp = steps/2;
+  //If you reached daily recommended number of steps 10,000 PARTY LIGHTS
+  if(steps>10,000){
+    partyLights();
+    }
   int d1000=temp/1000;
   int d100=temp/100;
   int d10= temp/10;
@@ -179,9 +182,9 @@ void NightDayMode(){
     delay(100);
     timer++;
    }
-  if (timer > 10) { //button has been pressed less than a second
+  if (timer > 20) { //button has been pressed less than 2 seconds
       for(int i=0;i<NUMPIXELS;i++){
-        pixels.setPixelColor(i, pixels.Color(204,0,0)); //red LEDs
+        pixels.setPixelColor(i, pixels.Color(255,255,255)); //white LEDs
         pixels.show();
       }
   }
