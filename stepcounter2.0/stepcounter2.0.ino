@@ -1,4 +1,6 @@
 const int tiltSensor = 13;
+long tiltTime = 0;
+long tiltDebounce = 50;
 int steps = 0;
 int switchState = HIGH;
 int prevSwitchState = LOW;
@@ -15,21 +17,24 @@ long elapsedTime;
 
 void setup() {
   Serial.begin(9600);
+  
   //Initialize segment display
-  pinMode(2, OUTPUT);  
-  pinMode(3, OUTPUT); 
-  pinMode(4, OUTPUT); 
-  pinMode(5, OUTPUT);  
-  pinMode(6, OUTPUT); 
-  pinMode(7, OUTPUT);
-  pinMode(9, OUTPUT); 
-  pinMode(D1, OUTPUT);
+  pinMode(2, OUTPUT);  //D
+  pinMode(3, OUTPUT);  //G
+  pinMode(4, OUTPUT);  //C
+  pinMode(5, OUTPUT);  //F
+  pinMode(6, OUTPUT);  //B
+  pinMode(7, OUTPUT);  //A
+  pinMode(9, OUTPUT);  //E
+
+  //4 digits of the 7 segment display
+  pinMode(D1, OUTPUT); 
   pinMode(D10, OUTPUT);
   pinMode(D100, OUTPUT);
   pinMode(D1000, OUTPUT);
+  
   //initialize tiltsensor
   pinMode(tiltSensor, INPUT);
-
 }
 
 void loop() {
@@ -40,6 +45,7 @@ void loop() {
 
 //STOPWATCH
 void StopWatch(){
+  //read the state the button, buttonState starts with LOW
   buttonState = digitalRead(A5);
 
   if (buttonState != lastButtonState) {
@@ -57,59 +63,75 @@ void StopWatch(){
     // Delay to avoid bouncing
     delay(50);
   }
-      int temp = (int)(elapsedTime);//TODO: change to min, add colon :
+      int temp = (int)(elapsedTime/1000); //changed to seconds instead (should change to seconds and minutes maybe xx:xx)
       int d1= temp%10;
       int d10= (temp/10)%10;
       int d100=(temp/100)%10;
       int d1000=(temp/1000)%10;
       
+  //For threading, this should not be here
+  //temp should be a global variable and display is another thread
 //  displaydigit1(d1,empty);
 //  displaydigit2(d10, empty);
 //  displaydigit3(d100, empty);
 //  displaydigit4(d1000,empty);
   lastButtonState = buttonState;
-  }
+}
   
 //STEP COUNTER
 void StepCounter(){
- switchState = digitalRead(tiltSensor);
-
-  if (switchState != prevSwitchState) {
-
-    if (switchState == LOW) {
-      steps = (steps + 1);
-    }
+ switchState = digitalRead(tiltSensor); //switchState is high
+ Serial.println(switchState);
+//  if (switchState != prevSwitchState) {
+//    if (switchState == LOW) {
+//      steps = (steps + 1);
+//    }
+//  }
+  //Debouncing doesn't work
+  if(switchState != prevSwitchState){
+    tiltTime = millis();
+    if(millis()-tiltTime > tiltDebounce){
+    steps++;
+   }
   }
+  
   int temp = steps/2;
   int d1000=temp/1000;
   int d100=temp/100;
   int d10= temp/10;
   int d1= temp%10;
-//  displaydigit1(d1,empty);
-//  displaydigit2(d10, empty);
-//  displaydigit3(d100, empty);
-//  displaydigit4(d1000,empty);
+  displaydigit1(d1,empty);
+  displaydigit2(d10, empty);
+  displaydigit3(d100, empty);
+  displaydigit4(d1000,empty);
 prevSwitchState = switchState;
   }
+
+//void Filter(){
+//  
+//}
 
 //ENCOURAGMENT
 void Encouragment(){
 //writeGood();
 //delay(100);
 //writeNice();
-  }
+}
+
 void writeNice(){
   displaydigit1(-1,'E');
   displaydigit2(-1, 'C');
   displaydigit3(-1,'I');
   displaydigit4(-1,'N');
   }
+  
 void writeGood(){
   displaydigit1(-1,'D');
   displaydigit2(-1, 'O');
   displaydigit3(-1,'O');
   displaydigit4(-1,'G');
   }
+
 void displaydigit1(int d1, char l){
     digitalWrite(D1, 0);
     digitalWrite(D10, 1);
@@ -117,6 +139,7 @@ void displaydigit1(int d1, char l){
     digitalWrite(D1000, 1);
     display(d1,l);
 }
+
 void displaydigit2(int d10, char l){
     digitalWrite(D1, 1);
     digitalWrite(D10, 0);
@@ -124,6 +147,7 @@ void displaydigit2(int d10, char l){
     digitalWrite(D1000, 1);
     display(d10,l);
  }
+ 
 void displaydigit3(int d100, char l){
     digitalWrite(D1, 1);
     digitalWrite(D10, 1);
@@ -131,6 +155,7 @@ void displaydigit3(int d100, char l){
     digitalWrite(D1000, 1);
     display(d100,l);
  }
+ 
  void displaydigit4(int d1000, char l){
     digitalWrite(D1, 1);
     digitalWrite(D10, 1);
@@ -138,10 +163,11 @@ void displaydigit3(int d100, char l){
     digitalWrite(D1000, 0);
     display(d1000,l);
  }
+ 
  void display(int d, char l){
   if (l != empty){ 
       switch (l) {
-        case('A'):
+      case('A'):
         digitalWrite(2, 0);
         digitalWrite(3, 1);
         digitalWrite(4, 1);
