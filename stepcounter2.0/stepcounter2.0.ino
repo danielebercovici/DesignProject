@@ -65,7 +65,7 @@ void loop() {
   //StopWatch();
   //StepCounter();
   //Encouragment();
-  NightDayMode();
+  //NightDayMode();
 }
 
 //STOPWATCH
