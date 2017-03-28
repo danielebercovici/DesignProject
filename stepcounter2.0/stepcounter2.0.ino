@@ -104,7 +104,7 @@ void StopWatch(){
         pixels.show();
       }
       delay(900);
-      //If workout was long (30min?) PARTY LIGHTS
+      //If workout was long (3 sec) rewarded w/ PARTY LIGHTS
       if((int)elapsedTime>3000){
        partyLights();
       }
@@ -151,7 +151,7 @@ void StepCounter(){
 //  }
   
   int temp = steps/2;
-  //If you reached daily recommended number of steps 10 PARTY LIGHTS
+  //If you reached daily recommended number of steps (10) rewarded w/ PARTY LIGHTS
   if(temp>10){
     partyLights();
     steps=0;
@@ -191,6 +191,8 @@ void writeGood(){
   displaydigit3(-1,'O');
   displaydigit4(-1,'G');
   }
+  
+//NIGHT DAY MODE
 void NightDayMode(){
   current = digitalRead(A5);
 
@@ -198,22 +200,17 @@ void NightDayMode(){
   if (current == LOW && previous == HIGH && (millis() - firstTime) > 200) {
     firstTime = millis();
   }
-
   millis_held = (millis() - firstTime);
   secs_held = millis_held / 1000;
-Serial.println(secs_held);
-  // This if statement is a basic debouncing tool, the button must be pushed for at least
-  // 100 milliseconds in a row for it to be considered as a push.
+  Serial.println(secs_held);
+  // debouncing check
   if (millis_held > 50) {
-
-
     // check if the button was released since we last checked
     if (current == HIGH && previous == LOW) {
-     
-  
 
-      // If the button was held for 3-6 seconds 
+      // If the button was held for 3-6 seconds for the first time
       if (secs_held >= 1 && secs_held < 3 && buttonPush==false ) {
+        //Turn on Night Mode
 //        for(int i=0;i<NUMPIXELS;i++){
 //              pixels.setPixelColor(i, pixels.Color(255,255,255)); //white LEDs
 //              pixels.show();
@@ -221,6 +218,7 @@ Serial.println(secs_held);
          Serial.print("LIGHTS camera action");
         buttonPush=true;
       }
+      // If the button was held for 3-6 seconds for the second time
       else if (secs_held >= 1 && secs_held < 3 && buttonPush==true ) {
           //turn off LEDS
           delay(700);
@@ -240,7 +238,7 @@ Serial.println(secs_held);
 void partyLights(){
    for(int j=0;j<3;j++){
   for(int i=0;i<NUMPIXELS;i++){
-      pixels.setPixelColor(i, pixels.Color(204,153,255)); //light purple LEDs
+      pixels.setPixelColor(i, pixels.Color(204,153,255)); //purple LEDs
       pixels.show();
       delay(2);
    }
@@ -266,7 +264,7 @@ void partyLights(){
     delay(800);
     //turn off LEDS
       for(int i=0;i<NUMPIXELS;i++){
-        pixels.setPixelColor(i, pixels.Color(0,0,0)); //red LEDs
+        pixels.setPixelColor(i, pixels.Color(0,0,0));
         pixels.show();
       }
   }
@@ -291,13 +289,12 @@ void partyLights(){
                 Serial.print("Unknown error,\t"); 
                 break;
   }
- // DISPLAY DATA
+ // display data (TODO: give some application)
   Serial.print(DHT.humidity,1);
   Serial.print(",\t");
   Serial.println(DHT.temperature,1);
-
   delay(1000);
-    }
+}
     
 void displaydigit1(int d1, char l){
     digitalWrite(D1, 0);
