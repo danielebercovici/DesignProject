@@ -3,6 +3,9 @@
 #ifdef __AVR__
   #include <avr/power.h>
 #endif
+#include <dht.h>
+dht DHT;
+
 
 const int tiltSensor = 13;
 long tiltTime = 0;
@@ -24,16 +27,17 @@ long elapsedTime;
 #define PIN            A4 //LED pin
 #define NUMPIXELS      60 //Num of LEDs
 int timer =0; //timer for LED button
+
 //Night time initialization 
-int current;         
-                    
+int current;                             
 long millis_held;    // How long the button was held (milliseconds)
 long secs_held;      // How long the button was held (seconds)
 long prev_secs_held; // How long the button was held in the previous check
 byte previous = HIGH;
 unsigned long firstTime;
 bool buttonPush=false;
-
+//humidity and temperature intialization 
+#define DHT11_PIN A3
 //intialize LED library
 Adafruit_NeoPixel pixels = Adafruit_NeoPixel(NUMPIXELS, PIN, NEO_GRB + NEO_KHZ800);
 
@@ -63,9 +67,10 @@ void setup() {
 
 void loop() {
   //StopWatch();
-  StepCounter();
+  //StepCounter();
   //Encouragment();
   //NightDayMode();
+  //HumidityTemp();
 }
 
 //STOPWATCH
@@ -121,10 +126,10 @@ void StopWatch(){
       
   //For threading, this should not be here
   //temp should be a global variable and display is another thread
-//  displaydigit1(d1,empty);
-//  displaydigit2(d10, empty);
-//  displaydigit3(d100, empty);
-//  displaydigit4(d1000,empty);
+  displaydigit1(d1,empty);
+  displaydigit2(d10, empty);
+  displaydigit3(d100, empty);
+  displaydigit4(d1000,empty);
   lastButtonState = buttonState;
 }
   
@@ -155,10 +160,10 @@ void StepCounter(){
   int d100=temp/100;
   int d10= temp/10;
   int d1= temp%10;
-//  displaydigit1(d1,empty);
-//  displaydigit2(d10, empty);
-//  displaydigit3(d100, empty);
-//  displaydigit4(d1000,empty);
+  displaydigit1(d1,empty);
+  displaydigit2(d10, empty);
+  displaydigit3(d100, empty);
+  displaydigit4(d1000,empty);
 prevSwitchState = switchState;
   }
 
@@ -265,6 +270,35 @@ void partyLights(){
         pixels.show();
       }
   }
+//HUMIDITY AND TEMPERATURE 
+ void HumidityTemp(){
+  // READ DATA
+   int chk;
+  //Error checking
+  chk = DHT.read11(DHT11_PIN);
+  switch (chk)
+  {
+    case DHTLIB_OK:  
+                Serial.print("OK,\t"); 
+                break;
+    case DHTLIB_ERROR_CHECKSUM: 
+                Serial.print("Checksum error,\t"); 
+                break;
+    case DHTLIB_ERROR_TIMEOUT: 
+                Serial.print("Time out error,\t"); 
+                break;
+    default: 
+                Serial.print("Unknown error,\t"); 
+                break;
+  }
+ // DISPLAY DATA
+  Serial.print(DHT.humidity,1);
+  Serial.print(",\t");
+  Serial.println(DHT.temperature,1);
+
+  delay(1000);
+    }
+    
 void displaydigit1(int d1, char l){
     digitalWrite(D1, 0);
     digitalWrite(D10, 1);
