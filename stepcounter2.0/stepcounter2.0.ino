@@ -63,7 +63,7 @@ void setup() {
 
 void loop() {
   //StopWatch();
-  //StepCounter();
+  StepCounter();
   //Encouragment();
   //NightDayMode();
 }
@@ -132,23 +132,24 @@ void StopWatch(){
 void StepCounter(){
  switchState = digitalRead(tiltSensor); //switchState is high
  //Serial.println(switchState);
-//  if (switchState != prevSwitchState) {
-//    if (switchState == LOW) {
-//      steps = (steps + 1);
-//    }
-//  }
-  //Debouncing doesn't work
-  if(switchState != prevSwitchState){
-    tiltTime = millis();
-    if(millis()-tiltTime > tiltDebounce){
-    steps++;
-   }
+  if (switchState != prevSwitchState) {
+    if (switchState == LOW) {
+      steps = (steps + 1);
+    }
   }
+//  //Debouncing doesn't work
+//  if(switchState != prevSwitchState){
+//    tiltTime = millis();
+//    if(millis()-tiltTime > tiltDebounce){
+//    steps++;
+//   }
+//  }
   
   int temp = steps/2;
-  //If you reached daily recommended number of steps 10,000 PARTY LIGHTS
-  if(steps>10,000){
+  //If you reached daily recommended number of steps 10 PARTY LIGHTS
+  if(temp>10){
     partyLights();
+    steps=0;
     }
   int d1000=temp/1000;
   int d100=temp/100;
