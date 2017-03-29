@@ -75,12 +75,11 @@ void setup() {
 }
 
 void loop() {
-  
   //StopWatch();
   //StepCounter();
   //Encouragment();
   //NightDayMode();
-  HumidityTemp();
+  //HumidityTemp();
 }
 
 //STOPWATCH
@@ -132,20 +131,6 @@ void StopWatch(){
     // Delay to avoid bouncing
     delay(50);
  
-
-      //delay(1000);
-      
-//      int d1= temp%10;
-//      int d10= (temp/10)%10;
-//      int d100=(temp/100)%10;
-//      int d1000=(temp/1000)%10;
-      
-  //For threading, this should not be here
-  //temp should be a global variable and display is another thread
-//  displaydigit1(d1,empty);
-//  displaydigit2(d10, empty);
-//  displaydigit3(d100, empty);
-//  displaydigit4(d1000,empty);
   lastButtonState = buttonState;
 }
   
@@ -159,13 +144,6 @@ void StepCounter(){
       steps = (steps + 1);
     }
   }
-//  //Debouncing doesn't work
-//  if(switchState != prevSwitchState){
-//    tiltTime = millis();
-//    if(millis()-tiltTime > tiltDebounce){
-//    steps++;
-//   }
-//  }
   
   int temp = steps/2;
   mydisp.clearScreen();
@@ -177,15 +155,6 @@ void StepCounter(){
     partyLights();
     steps=0;
     }
-
-//  int d1000=temp/1000;
-//  int d100=temp/100;
-//  int d10= temp/10;
-//  int d1= temp%10;
-//  displaydigit1(d1,empty);
-//  displaydigit2(d10, empty);
-//  displaydigit3(d100, empty);
-//  displaydigit4(d1000,empty);
 prevSwitchState = switchState;
   }
 
@@ -196,17 +165,7 @@ prevSwitchState = switchState;
 //ENCOURAGMENT
 void Encouragment(){
   writeGoodJob();
-//delay(100);
-//writeNice();
-}
-
-//void writeNice(){
-//  displaydigit1(-1,'E');
-//  displaydigit2(-1, 'C');
-//  displaydigit3(-1,'I');
-//  displaydigit4(-1,'N');
-//  }
-//  
+} 
 void writeGoodJob(){
   mydisp.clearScreen();
   mydisp.print("GOOD JOB!");
@@ -290,6 +249,7 @@ void partyLights(){
         pixels.show();
       }
   }
+  
 //HUMIDITY AND TEMPERATURE 
  void HumidityTemp(){
   // READ DATA
@@ -324,7 +284,6 @@ void partyLights(){
 //  Serial.print(",\t");
 //  Serial.println(DHT.temperature,1);
   delay(1000);
-  
   
 }
     
