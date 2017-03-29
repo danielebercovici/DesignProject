@@ -43,7 +43,7 @@ byte previous = HIGH;
 unsigned long firstTime;
 bool buttonPush=false;
 //humidity and temperature intialization 
-#define DHT11_PIN A3
+#define DHT11_PIN 8
 //intialize LED library
 Adafruit_NeoPixel pixels = Adafruit_NeoPixel(NUMPIXELS, PIN, NEO_GRB + NEO_KHZ800);
 
@@ -75,11 +75,12 @@ void setup() {
 }
 
 void loop() {
-  StopWatch();
+  
+  //StopWatch();
   //StepCounter();
   //Encouragment();
   //NightDayMode();
-  //HumidityTemp();
+  HumidityTemp();
 }
 
 //STOPWATCH
@@ -150,6 +151,7 @@ void StopWatch(){
   
 //STEP COUNTER
 void StepCounter(){
+  
  switchState = digitalRead(tiltSensor); //switchState is high
  //Serial.println(switchState);
   if (switchState != prevSwitchState) {
@@ -166,19 +168,24 @@ void StepCounter(){
 //  }
   
   int temp = steps/2;
+  mydisp.clearScreen();
+  Serial.print(temp);
+  mydisp.print("Steps:");
+  mydisp.print(temp);
   //If you reached daily recommended number of steps (10) rewarded w/ PARTY LIGHTS
   if(temp>10){
     partyLights();
     steps=0;
     }
-  int d1000=temp/1000;
-  int d100=temp/100;
-  int d10= temp/10;
-  int d1= temp%10;
-  displaydigit1(d1,empty);
-  displaydigit2(d10, empty);
-  displaydigit3(d100, empty);
-  displaydigit4(d1000,empty);
+
+//  int d1000=temp/1000;
+//  int d100=temp/100;
+//  int d10= temp/10;
+//  int d1= temp%10;
+//  displaydigit1(d1,empty);
+//  displaydigit2(d10, empty);
+//  displaydigit3(d100, empty);
+//  displaydigit4(d1000,empty);
 prevSwitchState = switchState;
   }
 
@@ -188,23 +195,23 @@ prevSwitchState = switchState;
 
 //ENCOURAGMENT
 void Encouragment(){
-writeGood();
+  writeGoodJob();
 //delay(100);
 //writeNice();
 }
 
-void writeNice(){
-  displaydigit1(-1,'E');
-  displaydigit2(-1, 'C');
-  displaydigit3(-1,'I');
-  displaydigit4(-1,'N');
-  }
-  
-void writeGood(){
-  displaydigit1(-1,'D');
-  displaydigit2(-1, 'O');
-  displaydigit3(-1,'O');
-  displaydigit4(-1,'G');
+//void writeNice(){
+//  displaydigit1(-1,'E');
+//  displaydigit2(-1, 'C');
+//  displaydigit3(-1,'I');
+//  displaydigit4(-1,'N');
+//  }
+//  
+void writeGoodJob(){
+  mydisp.clearScreen();
+  mydisp.print("GOOD JOB!");
+  delay(1000);
+  mydisp.clearScreen();
   }
   
 //NIGHT DAY MODE
@@ -305,10 +312,20 @@ void partyLights(){
                 break;
   }
  // display data (TODO: give some application)
-  Serial.print(DHT.humidity,1);
-  Serial.print(",\t");
-  Serial.println(DHT.temperature,1);
+   mydisp.clearScreen();
+   mydisp.print("Humidity: ");
+   mydisp.print(DHT.humidity);
+   mydisp.print("%");
+   mydisp.print("Temp: ");
+   mydisp.print(DHT.temperature);
+   mydisp.print("°C");
+      
+//  Serial.print(DHT.humidity,1);
+//  Serial.print(",\t");
+//  Serial.println(DHT.temperature,1);
   delay(1000);
+  
+  
 }
     
 void displaydigit1(int d1, char l){
