@@ -85,7 +85,7 @@ void loop() {
 //STOPWATCH
 void StopWatch(){
   //read the state the button, buttonState starts with LOW
-  buttonState = digitalRead(4);
+  buttonState = digitalRead(A3);
 
   if (buttonState != lastButtonState) {
     
@@ -122,15 +122,17 @@ void StopWatch(){
         pixels.setPixelColor(i, pixels.Color(0,0,0)); //red LEDs
         pixels.show();
       }
+      int temp = (int)(elapsedTime); 
+      mydisp.clearScreen();
+      mydisp.print("Time:");
+      mydisp.print(temp);
     }
       }
     // Delay to avoid bouncing
     delay(50);
  
-      int temp = (int)(elapsedTime); 
-      //CAN YOU SEE THIS?
-      mydisp.clearScreen();
-      mydisp.print(temp);
+
+      //delay(1000);
       
 //      int d1= temp%10;
 //      int d10= (temp/10)%10;
