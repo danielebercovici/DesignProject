@@ -128,7 +128,7 @@ void StopWatch(){
     delay(50);
  
       int temp = (int)(elapsedTime); 
-      
+      //CAN YOU SEE THIS?
       mydisp.clearScreen();
       mydisp.print(temp);
       
