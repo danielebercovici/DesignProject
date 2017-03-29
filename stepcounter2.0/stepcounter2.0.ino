@@ -175,7 +175,7 @@ void writeGoodJob(){
   
 //NIGHT DAY MODE
 void NightDayMode(){
-  current = digitalRead(A5);
+  current = digitalRead(A3);
 
   // if the button state changes to pressed, remember the start time 
   if (current == LOW && previous == HIGH && (millis() - firstTime) > 200) {
@@ -192,10 +192,10 @@ void NightDayMode(){
       // If the button was held for 3-6 seconds for the first time
       if (secs_held >= 1 && secs_held < 3 && buttonPush==false ) {
         //Turn on Night Mode
-//        for(int i=0;i<NUMPIXELS;i++){
-//              pixels.setPixelColor(i, pixels.Color(255,255,255)); //white LEDs
-//              pixels.show();
-//         }
+        for(int i=0;i<NUMPIXELS;i++){
+              pixels.setPixelColor(i, pixels.Color(255,255,255)); //white LEDs
+              pixels.show();
+         }
          Serial.print("LIGHTS camera action");
         buttonPush=true;
       }
@@ -278,7 +278,7 @@ void partyLights(){
    mydisp.print("%");
    mydisp.print("Temp: ");
    mydisp.print(DHT.temperature);
-   mydisp.print("°C");
+   mydisp.print("C");
       
 //  Serial.print(DHT.humidity,1);
 //  Serial.print(",\t");
