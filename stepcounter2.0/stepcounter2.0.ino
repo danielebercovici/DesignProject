@@ -5,7 +5,13 @@
 #endif
 #include <dht.h>
 dht DHT;
-
+#define _Digole_Serial_I2C_ 
+#include <DigoleSerial.h>
+//I2C setup
+#if defined(_Digole_Serial_I2C_)
+#include <Wire.h>
+DigoleSerialDisp mydisp(&Wire,'\x27');  //I2C:Arduino UNO: SDA (data line) is on analog input pin 4, and SCL (clock line) is on analog input pin 5 on UNO and Duemilanove
+#endif
 
 const int tiltSensor = 13;
 long tiltTime = 0;
@@ -24,7 +30,7 @@ long elapsedTime;
 #define D100 10 //Digit 3
 #define D1000 8 //Digit 4
 
-#define PIN            A4 //LED pin
+#define PIN            A2 //LED pin
 #define NUMPIXELS      60 //Num of LEDs
 int timer =0; //timer for LED button
 
@@ -63,10 +69,13 @@ void setup() {
   pinMode(tiltSensor, INPUT);
   // This initializes LED
   pixels.begin(); 
+  //initialize Display
+  mydisp.begin();
+  mydisp.setColor(255);
 }
 
 void loop() {
-  //StopWatch();
+  StopWatch();
   //StepCounter();
   //Encouragment();
   //NightDayMode();
@@ -76,7 +85,7 @@ void loop() {
 //STOPWATCH
 void StopWatch(){
   //read the state the button, buttonState starts with LOW
-  buttonState = digitalRead(A5);
+  buttonState = digitalRead(4);
 
   if (buttonState != lastButtonState) {
     
@@ -118,18 +127,22 @@ void StopWatch(){
     // Delay to avoid bouncing
     delay(50);
  
-      int temp = (int)(elapsedTime/1000); //changed to seconds instead (should change to seconds and minutes maybe xx:xx)
-      int d1= temp%10;
-      int d10= (temp/10)%10;
-      int d100=(temp/100)%10;
-      int d1000=(temp/1000)%10;
+      int temp = (int)(elapsedTime); 
+      
+      mydisp.clearScreen();
+      mydisp.print(temp);
+      
+//      int d1= temp%10;
+//      int d10= (temp/10)%10;
+//      int d100=(temp/100)%10;
+//      int d1000=(temp/1000)%10;
       
   //For threading, this should not be here
   //temp should be a global variable and display is another thread
-  displaydigit1(d1,empty);
-  displaydigit2(d10, empty);
-  displaydigit3(d100, empty);
-  displaydigit4(d1000,empty);
+//  displaydigit1(d1,empty);
+//  displaydigit2(d10, empty);
+//  displaydigit3(d100, empty);
+//  displaydigit4(d1000,empty);
   lastButtonState = buttonState;
 }
   
