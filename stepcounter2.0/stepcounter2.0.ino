@@ -13,6 +13,8 @@ dht DHT;
 DigoleSerialDisp mydisp(&Wire,'\x27');  //I2C:Arduino UNO: SDA (data line) is on analog input pin 4, and SCL (clock line) is on analog input pin 5 on UNO and Duemilanove
 #endif
 
+//HI!!!!!
+
 const int tiltSensor = 13;
 long tiltTime = 0;
 long tiltDebounce = 50;
