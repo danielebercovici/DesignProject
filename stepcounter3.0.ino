@@ -51,17 +51,11 @@ float threshold = 80.0;
 
 int timer = 0; //timer for LED button
 const int tiltSensor = 11;
-const int buttonPin = 9;
 long tiltTime = 0;
 long tiltDebounce = 50;
 int switchState = HIGH;
 int prevSwitchState = LOW;
-char empty = '$'; 
-int buttonPushCounter = 0;  
-int buttonState = 0;         
-int lastButtonState = 1;    
-long startTime ;
-long elapsedTime;
+char empty = '$';  
 
 //Night time initialization 
 int current;                             
@@ -71,6 +65,12 @@ long prev_secs_held; // How long the button was held in the previous check
 byte previous = HIGH;
 unsigned long firstTime;
 bool buttonPush=false;
+
+//Stop watch initialization
+const int buttonPin = 9;
+unsigned long startTime, elapsedTime, elapsedHours, elapsedMinutes, elapsedSeconds;
+int buttonPushCounter, buttonState = 0;  
+int lastButtonState = 1;   
 
 void setup() {
   Serial.begin(9600);
@@ -99,9 +99,9 @@ void setup() {
 //}
 
 void stopwatch(){
-  //read the state the button, buttonState starts with LOW
-  buttonState = digitalRead(9); //need to change pins (does not have to be analog)
+  unsigned long h, m, s, ms, over;
 
+  buttonState = digitalRead(9);   //read the state the button, buttonState starts with LOW (pressed or not pressed)
   if (buttonState != lastButtonState) {
     
     if (buttonState == HIGH && buttonPushCounter==0) {
@@ -120,16 +120,20 @@ void stopwatch(){
       }
     } else if (buttonState == HIGH && buttonPushCounter==1) {
       elapsedTime =   millis() - startTime;
+      Serial.println(elapsedTime);
+      elapsedSeconds = elapsedTime/1000L;
+      elapsedMinutes = elapsedTime/60000L;
+      elapsedHours = elapsedTime/3600000L;
       buttonPushCounter--;
       Serial.println("stop");
-      Serial.println( (int)(elapsedTime)); 
+      //Serial.println((int) elapsedTime);
       for(int i=0;i<NUMPIXELS;i++){
         pixels.setPixelColor(i, pixels.Color(204,0,0)); //red LEDs
         pixels.show();
       }
       delay(900);
       //If workout was long (3 sec) rewarded w/ PARTY LIGHTS
-      if((int)elapsedTime>3000){
+      if(elapsedTime > 3000){
        partyLights();
       }
       //turn off LEDS
@@ -137,14 +141,42 @@ void stopwatch(){
         pixels.setPixelColor(i, pixels.Color(0,0,0)); //red LEDs
         pixels.show();
       }
-      int temp = (int)(elapsedTime); 
+      
       mydisp.clearScreen();
-      mydisp.print("Time:");
-      mydisp.print(temp);
-    }
+      mydisp.print("Time Elapsed: ");
+      mydisp.println();
+
+      if(elapsedHours<10){
+        mydisp.print("0");
       }
+      mydisp.print(elapsedHours);
+      mydisp.print(":");
+      if(elapsedMinutes < 10) {
+        mydisp.print("0");
+      }
+      if(elapsedMinutes > 60) {
+        m = elapsedMinutes%60L;
+        mydisp.print(m);
+      } else {
+        mydisp.print(elapsedMinutes);
+      }
+      mydisp.print(":");
+      
+      if(elapsedSeconds < 10){
+        mydisp.print("0");
+      }
+      if(elapsedSeconds > 60) {
+        s = elapsedSeconds%60L;
+        mydisp.print(s);
+      } else {
+        mydisp.print(elapsedSeconds);
+      }
+          }
+            }
     // Delay to avoid bouncing
-    delay(10);
+    //delay(10);
+    delay(5000);
+    //mydisp.moduleOff();
  
   lastButtonState = buttonState;
 }
@@ -413,7 +445,7 @@ void partyLights(){
 //  }
   
 void loop() {
- 
+stopwatch(); 
 }
 
 
