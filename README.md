@@ -1,4 +1,5 @@
-# dp 
+# Design Project: Excercise Shoe
+## Dependencies:
 Depends on NeoPixel Library, Download here:https://github.com/adafruit/Adafruit_NeoPixel 
 
 Depends on DH11 Library, Download here: DHTLib
